@@ -215,9 +215,12 @@ interface Clerk {
     static void markdown(String text) { new Markdown(view()).write(text); }
 }
 
-/open skills/File/File.java
+/open skills/Text/Text.java
+/open skills/ObjectInspector/ObjectInspector.java
 /open clerks/Turtle/Turtle.java
 /open clerks/Markdown/Markdown.java
 /open clerks/TicTacToe/TicTacToe.java
+/open clerks/Dot/Dot.java
+/open clerks/Input/Slider.java
 
 // LiveView view = Clerk.view();
