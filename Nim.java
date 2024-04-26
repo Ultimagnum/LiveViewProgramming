@@ -85,6 +85,31 @@ class Nim implements NimGame {
         for(int n : rows) s += "\n" + "I ".repeat(n);
         return s;
     }
+    int primes [] = {2,3,5,7,9};
+    public int hashCode() {
+        assert rows.length <= primes.length : "Only Nim-Games with less than " + (primes.length) + " rows can be hashed";
+
+        int[] rowsClone = rows.clone();
+        Arrays.sort(rowsClone);
+
+        int startIndex;
+        for (int i = 0; i < rowsClone.length; i++) {
+            if (rowsClone[i] != 0) startIndex = i;
+        }
+
+        for (int i = startIndex; i < rowsClone.length; i++) {
+            
+        }
+
+    }
+    public boolean equals(Object other) {
+        if (other == null) return false;
+        if (other == this) return true;
+        if (other.getClass() != getClass()) return false;
+        Nim that = (Nim) other;
+        if (that.hashCode() == hashCode()) return true;
+        return false;
+    }
 }
 
 Nim nim = Nim.of(2,3,4);
