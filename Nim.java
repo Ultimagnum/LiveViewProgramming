@@ -112,6 +112,15 @@ class Nim implements NimGame {
     }
 }
 
+class NimView extends Nim {
+    NimView of() {
+        return (NimView) Nim.of(rows);
+    }
+    void show() {
+
+    }
+}
+
 Nim nim = Nim.of(2,3,4);
 assert nim != nim.play(Move.of(1,2)) : "Return a new Nim instance";
 
