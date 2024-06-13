@@ -52,6 +52,20 @@ class Turtle implements Clerk {
         return this;
     }
 
+    Turtle strafeLeft(double distance) {
+        left(90);
+        forward(distance);
+        right(90);
+        return this;
+    }
+
+    Turtle strafeRight(double distance) {
+        right(90);
+        forward(distance);
+        left(90);
+        return this;
+    }
+
     Turtle color(int red, int green, int blue) {
         Clerk.call(view, STR."turtle\{ID}.color('rgb(\{red & 0xFF}, \{green & 0xFF}, \{blue & 0xFF})');");
         return this;
