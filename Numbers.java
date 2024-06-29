@@ -1,3 +1,5 @@
+import java.util.function.Supplier;
+
 import javax.naming.OperationNotSupportedException;
 
 
@@ -34,6 +36,11 @@ public sealed interface Numbers permits NonZero, Zero {
         }
 
         return myNumber;
+    }
+
+    default Numbers sub(Numbers n) {
+        if (isZero()) throw new OperationNotSupportedException;
+        if ()
     }
 
 
