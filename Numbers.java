@@ -21,7 +21,6 @@ public sealed interface Numbers permits NonZero, Zero {
         };
     }
 
-
     default Numbers add(Numbers n) throws OperationNotSupportedException {
         if (isZero()) return n;
         if (n.isZero()) return this;
@@ -127,5 +126,31 @@ public sealed interface Numbers permits NonZero, Zero {
         myString = myString.replace("DCD", "CM");
 
         return myString;
+    }
+
+    default Numbers asObject(String myString) {
+        if (myString.equals("N")) {
+            return new Zero();
+        }
+
+        myString = myString.replace("CM", "DCD");
+        myString = myString.replace("M", "DD");
+        myString = myString.replace("CD", "CCCC");
+        myString = myString.replace("D", "CCCCC");
+        myString = myString.replace("XC", "LXL");
+        myString = myString.replace("C", "LL");
+        myString = myString.replace("XL", "XXXX");
+        myString = myString.replace("L", "XXXXX");
+        myString = myString.replace("IX", "VIV");
+        myString = myString.replace("X", "VV");
+        myString = myString.replace("IV", "IIII");
+        myString = myString.replace("V", "IIIII");
+
+        Numbers myNumber = new Zero();
+        for (int i = 0; i < myString.length(); i++) {
+            myNumber.addOne();
+        }
+
+        return myNumber;
     }
 }
