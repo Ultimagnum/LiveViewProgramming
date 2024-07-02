@@ -1,22 +1,32 @@
 import javax.naming.OperationNotSupportedException;
 
-public sealed interface Numbers permits NonZero, Zero {
+public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
     
     default boolean isZero() {
         return switch (this) {
             case Zero z -> true;
             case NonZero nz -> false;
+            //case NegativeNonZero nnz -> false;
             default -> false;
         };
     }
 
     default Numbers addOne() {
         return new NonZero(this);
+
+        return switch (this) {
+            case NonZero(Numbers pred) -> new NonZero(this);
+            case Zero() -> new NonZero(this);
+            //case NegativeNonZero(Numbers succ) -> succ;
+            default -> throw new OperationNotSupportedException();
+        };
     }
 
     default Numbers subOne() throws OperationNotSupportedException {
         return switch (this) {
             case NonZero(Numbers pred) -> pred;
+            //case Zero() -> new NegativeNonZero(this);
+            //case NegativeNonZero(Numbers succ) -> new NegativeNonZero(this);
             default -> throw new OperationNotSupportedException();
         };
     }
@@ -152,5 +162,20 @@ public sealed interface Numbers permits NonZero, Zero {
         }
 
         return myNumber;
+    }
+
+    default boolean isEqual(Object other) {
+        if (other == null) return false;
+        if (other == this) return true;
+        if (Zero.class != other.getClass() || NonZero.class != other.getClass()) return false;
+        Numbers that = (Numbers) other;
+
+        try {
+            if (sub(that).isZero()) return true;
+        } catch (OperationNotSupportedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
     }
 }
