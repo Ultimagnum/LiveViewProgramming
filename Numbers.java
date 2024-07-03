@@ -1,6 +1,6 @@
 import javax.naming.OperationNotSupportedException;
 
-public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
+public sealed interface Numbers permits NonZero, Zero {
     
     default boolean isZero() {
         return switch (this) {
@@ -14,12 +14,12 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
     default Numbers addOne() {
         return new NonZero(this);
 
-        return switch (this) {
+        /* return switch (this) {
             case NonZero(Numbers pred) -> new NonZero(this);
             case Zero() -> new NonZero(this);
             //case NegativeNonZero(Numbers succ) -> succ;
             default -> throw new OperationNotSupportedException();
-        };
+        }; */
     }
 
     default Numbers subOne() throws OperationNotSupportedException {
