@@ -1,3 +1,4 @@
+package Taschenrechner;
 import java.util.function.Function;
 
 Function<String,Numbers> toNumbers = (Function<String,Numbers>) n -> {if (n == "N") return new Zero();

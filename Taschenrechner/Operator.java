@@ -1,3 +1,4 @@
+package Taschenrechner;
 import java.util.function.BiFunction;
 
 import javax.naming.OperationNotSupportedException;

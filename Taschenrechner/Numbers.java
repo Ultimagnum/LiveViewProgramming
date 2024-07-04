@@ -1,3 +1,4 @@
+package Taschenrechner;
 import javax.naming.OperationNotSupportedException;
 
 public sealed interface Numbers permits NonZero, Zero {
