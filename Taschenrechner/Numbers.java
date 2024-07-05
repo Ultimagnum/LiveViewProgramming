@@ -1,66 +1,82 @@
 package Taschenrechner;
 import javax.naming.OperationNotSupportedException;
 
-public sealed interface Numbers permits NonZero, Zero {
+public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
     
     default boolean isZero() {
         return switch (this) {
             case Zero z -> true;
             case NonZero nz -> false;
-            //case NegativeNonZero nnz -> false;
+            case NegativeNonZero nnz -> false;
             default -> false;
         };
     }
 
     default Numbers addOne() {
-        return new NonZero(this);
-
-        /* return switch (this) {
+        return switch (this) {
             case NonZero(Numbers pred) -> new NonZero(this);
             case Zero() -> new NonZero(this);
-            //case NegativeNonZero(Numbers succ) -> succ;
-            default -> throw new OperationNotSupportedException();
-        }; */
+            case NegativeNonZero(Numbers succ) -> succ;
+        }; 
     }
 
-    default Numbers subOne() throws OperationNotSupportedException {
+    default Numbers subOne() {
         return switch (this) {
             case NonZero(Numbers pred) -> pred;
-            //case Zero() -> new NegativeNonZero(this);
-            //case NegativeNonZero(Numbers succ) -> new NegativeNonZero(this);
-            default -> throw new OperationNotSupportedException();
+            case Zero() -> new NegativeNonZero(this);
+            case NegativeNonZero(Numbers succ) -> new NegativeNonZero(this);
         };
     }
 
-    default Numbers add(Numbers n) throws OperationNotSupportedException {
+    default Numbers add(Numbers n) {
         if (isZero()) return n;
         if (n.isZero()) return this;
         Numbers sum = this;
         Numbers summand = n;
 
         while (!summand.isZero()) {
-            sum = sum.addOne();
-            summand = summand.subOne();
+            
+            switch (summand) {
+                case NonZero nz:
+                    sum = sum.addOne();
+                    summand = summand.subOne();
+                    break;
+                case NegativeNonZero nnz:
+                    sum = sum.subOne();
+                    summand = summand.addOne();
+                    break;
+            }
         }
-
         return sum;
     }
 
-    default Numbers sub(Numbers n) throws OperationNotSupportedException {
-        if (isZero()) throw new OperationNotSupportedException();
+    default Numbers sub(Numbers n) {
         if (n.isZero()) return this;
         Numbers difference = this;
         Numbers minuend = n;
 
         while (!minuend.isZero()) {
-            difference = difference.subOne();
-            minuend = minuend.subOne();
+            switch (minuend) {
+                case NonZero nz:
+                    difference = difference.subOne();
+                    minuend = minuend.subOne();
+                    break;
+
+                case NegativeNonZero nnz:
+                    difference = difference.addOne();
+                    minuend = minuend.addOne();
+                    break;
+            }
         }
 
         return difference;
     }
 
-    default Numbers mul(Numbers n) throws OperationNotSupportedException {
+    default Numbers neg(Numbers n) {
+        
+    }
+
+    default Numbers mul(Numbers n) {
         if (isZero() || n.isZero()) return new Zero();
 
         Numbers product = new Zero();
@@ -69,7 +85,10 @@ public sealed interface Numbers permits NonZero, Zero {
 
         while (!factor2.isZero()) {
             product = product.add(factor1);
-            factor2 = factor2.subOne();
+            switch (factor2) {
+                case NonZero nz -> factor2.subOne();
+                case NegativeNonZero nnz -> factor2.addOne();
+            }
         }
 
         return product;
@@ -82,6 +101,17 @@ public sealed interface Numbers permits NonZero, Zero {
         Numbers quotient = new Zero();
         Numbers dividend = this;
         Numbers divisor = n;
+
+
+
+        switch (divisor) {
+            case NonZero nz:
+            dividend = dividend.sub(divisor)    
+            break;
+        
+            case NegativeNonZero nnz:
+            break;
+        }
 
         while (!dividend.isZero()) {
             try {
@@ -115,12 +145,19 @@ public sealed interface Numbers permits NonZero, Zero {
 
     default String asString() throws OperationNotSupportedException {
         if (isZero()) return "N";
-        String myString = "";
+        String myString;
+        switch (this) {
+            case NonZero nz -> myString = "";
+            case NegativeNonZero nnz -> myString = "-";
+        }
         Numbers myNumber = this;
 
         while (!myNumber.isZero()) {
             myString += "I";
-            myNumber = myNumber.subOne();
+            switch (myNumber) {
+                case NonZero nz -> myNumber.subOne();
+                case NegativeNonZero nnz -> myNumber.addOne();
+            }
         }
 
         myString = myString.replace("IIIII", "V");
@@ -170,13 +207,7 @@ public sealed interface Numbers permits NonZero, Zero {
         if (other == this) return true;
         if (Zero.class != other.getClass() || NonZero.class != other.getClass()) return false;
         Numbers that = (Numbers) other;
-
-        try {
-            if (sub(that).isZero()) return true;
-        } catch (OperationNotSupportedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        if (sub(that).isZero()) return true;
         return false;
     }
 }
