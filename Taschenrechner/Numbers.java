@@ -1,4 +1,3 @@
-package Taschenrechner;
 import javax.naming.OperationNotSupportedException;
 
 public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
@@ -45,6 +44,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
                     sum = sum.subOne();
                     summand = summand.addOne();
                     break;
+                default: break;
             }
         }
         return sum;
@@ -66,17 +66,19 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
                     difference = difference.addOne();
                     minuend = minuend.addOne();
                     break;
+                
+                default: break;
             }
         }
 
         return difference;
     }
 
-    default Numbers neg(Numbers n) {
-        
+    default Numbers neg() {
+        return new Zero().sub(this);
     }
 
-    default Numbers mul(Numbers n) {
+    /* default Numbers mul(Numbers n) {
         if (isZero() || n.isZero()) return new Zero();
 
         Numbers product = new Zero();
@@ -92,9 +94,9 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
         }
 
         return product;
-    }
+    } */
 
-    default Numbers div(Numbers n) throws OperationNotSupportedException {
+    /* default Numbers div(Numbers n) throws OperationNotSupportedException {
         if (isZero()) return new Zero();
         if (n.isZero()) throw new OperationNotSupportedException();
 
@@ -123,9 +125,9 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
         }
 
         return quotient;
-    }
+    } */
 
-    default Numbers mod(Numbers n) throws OperationNotSupportedException {
+    /* default Numbers mod(Numbers n) throws OperationNotSupportedException {
         if (isZero()) return new Zero();
         if (n.isZero()) throw new OperationNotSupportedException();
 
@@ -141,9 +143,18 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
         }
 
         return dividend;
+    } */
+    
+    default boolean isEqual(Object other) {
+        if (other == null) return false;
+        if (other == this) return true;
+        if (Zero.class != other.getClass() || NonZero.class != other.getClass() || NegativeNonZero.class != other.getClass()) return false;
+        Numbers that = (Numbers) other;
+        if (sub(that).isZero()) return true;
+        return false;
     }
 
-    default String asString() throws OperationNotSupportedException {
+    /* default String asString() throws OperationNotSupportedException {
         if (isZero()) return "N";
         String myString;
         switch (this) {
@@ -174,9 +185,9 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
         myString = myString.replace("DCD", "CM");
 
         return myString;
-    }
+    } */
 
-    default Numbers asObject(String myString) {
+    /* default Numbers asObject(String myString) {
         if (myString.equals("N")) {
             return new Zero();
         }
@@ -200,14 +211,5 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
         }
 
         return myNumber;
-    }
-
-    default boolean isEqual(Object other) {
-        if (other == null) return false;
-        if (other == this) return true;
-        if (Zero.class != other.getClass() || NonZero.class != other.getClass()) return false;
-        Numbers that = (Numbers) other;
-        if (sub(that).isZero()) return true;
-        return false;
-    }
+    } */
 }
