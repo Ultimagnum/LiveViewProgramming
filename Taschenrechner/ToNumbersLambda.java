@@ -17,7 +17,6 @@ Function<String,Numbers> toNumbers = (Function<String,Numbers>) n -> {if (n == "
 
                                                     Numbers myNumber = new Zero();
                                                     for (char c : m.toCharArray()) {
-                                                        if (c != 'I') throw new Exception();
                                                         myNumber = myNumber.addOne();
                                                     }
                                                     return myNumber;

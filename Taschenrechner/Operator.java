@@ -3,33 +3,9 @@ import java.util.function.BiFunction;
 import javax.naming.OperationNotSupportedException;
 
 public enum Operator implements BiFunction<Numbers, Numbers, Numbers> {
-    ADD ((x,y) -> {
-        try {
-            return x.add(y);
-        } catch (OperationNotSupportedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }),
-    SUB ((x,y) -> {
-        try {
-            return x.sub(y);
-        } catch (OperationNotSupportedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }),
-    MUL ((x,y) -> {
-        try {
-            return x.mul(y);
-        } catch (OperationNotSupportedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }),
+    ADD ((x,y) -> x.add(y)),
+    SUB ((x,y) -> x.sub(y)),
+    MUL ((x,y) -> x.mul(y)),
     DIV ((x,y) -> {
         try {
             return x.div(y);

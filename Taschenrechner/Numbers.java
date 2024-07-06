@@ -2,11 +2,56 @@ import javax.naming.OperationNotSupportedException;
 
 public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
     
-    default boolean isZero() {
+    default boolean equalZero() {
         return switch (this) {
             case Zero z -> true;
             case NonZero nz -> false;
             case NegativeNonZero nnz -> false;
+            default -> false;
+        };
+    }
+
+    default boolean notZero() {
+        return switch (this) {
+            case Zero z -> false;
+            case NonZero nz -> true;
+            case NegativeNonZero nnz -> true;
+            default -> false;
+        };
+    }
+
+    default boolean greaterZero() {
+        return switch (this) {
+            case Zero z -> false;
+            case NonZero nz -> true;
+            case NegativeNonZero nnz -> false;
+            default -> false;
+        };
+    }
+
+    default boolean greaterEqualZero() {
+        return switch (this) {
+            case Zero z -> true;
+            case NonZero nz -> true;
+            case NegativeNonZero nnz -> false;
+            default -> false;
+        };
+    }
+
+    default boolean lessZero() {
+        return switch (this) {
+            case Zero z -> false;
+            case NonZero nz -> false;
+            case NegativeNonZero nnz -> true;
+            default -> false;
+        };
+    }
+
+    default boolean lessEqualZero() {
+        return switch (this) {
+            case Zero z -> true;
+            case NonZero nz -> false;
+            case NegativeNonZero nnz -> true;
             default -> false;
         };
     }
@@ -28,12 +73,12 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
     }
 
     default Numbers add(Numbers n) {
-        if (isZero()) return n;
-        if (n.isZero()) return this;
+        if (equalZero()) return n;
+        if (n.equalZero()) return this;
         Numbers sum = this;
         Numbers summand = n;
 
-        while (!summand.isZero()) {
+        while (!summand.equalZero()) {
             
             switch (summand) {
                 case NonZero nz:
@@ -51,21 +96,21 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
     }
 
     default Numbers sub(Numbers n) {
-        if (n.isZero()) return this;
+        if (n.equalZero()) return this;
         Numbers difference = this;
         Numbers minuend = n;
 
-        while (!minuend.isZero()) {
+        while (!minuend.equalZero()) {
             switch (minuend) {
                 case NonZero nz:
-                    difference = difference.subOne();
-                    minuend = minuend.subOne();
-                    break;
+                difference = difference.subOne();
+                minuend = minuend.subOne();
+                break;
 
                 case NegativeNonZero nnz:
-                    difference = difference.addOne();
-                    minuend = minuend.addOne();
-                    break;
+                difference = difference.addOne();
+                minuend = minuend.addOne();
+                break;
                 
                 default: break;
             }
@@ -78,84 +123,90 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
         return new Zero().sub(this);
     }
 
-    /* default Numbers mul(Numbers n) {
-        if (isZero() || n.isZero()) return new Zero();
+    default Numbers mul(Numbers n) {
+        if (equalZero() || n.equalZero()) return new Zero();
 
         Numbers product = new Zero();
         Numbers factor1 = this;
         Numbers factor2 = n;
 
-        while (!factor2.isZero()) {
+        while (!factor2.equalZero()) {
+
+            
             product = product.add(factor1);
+            
             switch (factor2) {
-                case NonZero nz -> factor2.subOne();
-                case NegativeNonZero nnz -> factor2.addOne();
-            }
-        }
-
-        return product;
-    } */
-
-    /* default Numbers div(Numbers n) throws OperationNotSupportedException {
-        if (isZero()) return new Zero();
-        if (n.isZero()) throw new OperationNotSupportedException();
-
-        Numbers quotient = new Zero();
-        Numbers dividend = this;
-        Numbers divisor = n;
-
-
-
-        switch (divisor) {
-            case NonZero nz:
-            dividend = dividend.sub(divisor)    
-            break;
-        
-            case NegativeNonZero nnz:
-            break;
-        }
-
-        while (!dividend.isZero()) {
-            try {
-                dividend = dividend.sub(divisor);
-            } catch (Exception e) {
+                case NonZero nz:
+                factor2 = factor2.subOne();
                 break;
+
+                case NegativeNonZero nnz:
+                factor2 = factor2.addOne();
+                break;
+
+                default:break;
             }
+        }
+        
+        if (n.lessZero()) return product.neg();
+        return product;
+    }
+
+    default Numbers div(Numbers n) throws OperationNotSupportedException {
+        if (equalZero()) return new Zero();
+        if (n.equalZero()) throw new OperationNotSupportedException();
+
+        Numbers dividend;
+        Numbers divisor;
+        Numbers quotient = new Zero();
+
+        if (this.greaterZero()) dividend = this;
+        else dividend = this.neg();
+
+        if (n.greaterZero()) divisor = n;
+        else divisor = n.neg();
+
+        while (!dividend.sub(divisor).lessEqualZero()) {
+            dividend = dividend.sub(divisor);
             quotient = quotient.addOne();
         }
 
-        return quotient;
-    } */
+        if (this.getClass() == n.getClass()) return quotient;
+        return quotient.neg();
+    }
 
-    /* default Numbers mod(Numbers n) throws OperationNotSupportedException {
-        if (isZero()) return new Zero();
-        if (n.isZero()) throw new OperationNotSupportedException();
+    default Numbers mod(Numbers n) throws OperationNotSupportedException {
+        if (equalZero()) return new Zero();
+        if (n.equalZero()) throw new OperationNotSupportedException();
 
-        Numbers dividend = this;
-        Numbers divisor = n;
+        Numbers dividend;
+        Numbers divisor;
 
-        while (!dividend.isZero()) {
-            try {
-                dividend = dividend.sub(divisor);
-            } catch (Exception e) {
-                break;
-            }
+        if (this.greaterZero()) dividend = this;
+        else dividend = this.neg();
+
+        if (n.greaterZero()) divisor = n;
+        else divisor = n.neg();
+
+        while (!dividend.sub(divisor).lessEqualZero()) {
+            dividend = dividend.sub(divisor);
         }
 
-        return dividend;
-    } */
+        if (this.getClass() == n.getClass()) return dividend;
+        return dividend.neg();
+    }
     
     default boolean isEqual(Object other) {
         if (other == null) return false;
         if (other == this) return true;
         if (Zero.class != other.getClass() || NonZero.class != other.getClass() || NegativeNonZero.class != other.getClass()) return false;
         Numbers that = (Numbers) other;
-        if (sub(that).isZero()) return true;
+        if (sub(that).equalZero()) return true;
         return false;
     }
 
     /* default String asString() throws OperationNotSupportedException {
-        if (isZero()) return "N";
+        if (equalZero()) return "N";
         String myString;
         switch (this) {
             case NonZero nz -> myString = "";
@@ -163,7 +214,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
         }
         Numbers myNumber = this;
 
-        while (!myNumber.isZero()) {
+        while (!myNumber.equalZero()) {
             myString += "I";
             switch (myNumber) {
                 case NonZero nz -> myNumber.subOne();
