@@ -166,7 +166,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
         if (n.greaterZero()) divisor = n;
         else divisor = n.neg();
 
-        while (!dividend.sub(divisor).lessEqualZero()) {
+        while (!dividend.sub(divisor).lessZero()) {
             dividend = dividend.sub(divisor);
             quotient = quotient.addOne();
         }
@@ -188,7 +188,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
         if (n.greaterZero()) divisor = n;
         else divisor = n.neg();
 
-        while (!dividend.sub(divisor).lessEqualZero()) {
+        while (!dividend.sub(divisor).lessZero()) {
             dividend = dividend.sub(divisor);
         }
 
