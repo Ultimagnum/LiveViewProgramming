@@ -199,7 +199,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
     default boolean isEqual(Object other) {
         if (other == null) return false;
         if (other == this) return true;
-        if (Zero.class != other.getClass() || NonZero.class != other.getClass() || NegativeNonZero.class != other.getClass()) return false;
+        if (getClass() != other.getClass()) return false;
         Numbers that = (Numbers) other;
         if (sub(that).equalZero()) return true;
         return false;
