@@ -1,11 +1,11 @@
 import javax.naming.OperationNotSupportedException;
 
-public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
+public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
     
     default boolean equalZero() {
         return switch (this) {
             case Zero z -> true;
-            case NonZero nz -> false;
+            case PositiveNonZero pnz -> false;
             case NegativeNonZero nnz -> false;
             default -> false;
         };
@@ -14,7 +14,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
     default boolean notZero() {
         return switch (this) {
             case Zero z -> false;
-            case NonZero nz -> true;
+            case PositiveNonZero pnz -> true;
             case NegativeNonZero nnz -> true;
             default -> false;
         };
@@ -23,7 +23,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
     default boolean greaterZero() {
         return switch (this) {
             case Zero z -> false;
-            case NonZero nz -> true;
+            case PositiveNonZero pnz -> true;
             case NegativeNonZero nnz -> false;
             default -> false;
         };
@@ -32,7 +32,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
     default boolean greaterEqualZero() {
         return switch (this) {
             case Zero z -> true;
-            case NonZero nz -> true;
+            case PositiveNonZero pnz -> true;
             case NegativeNonZero nnz -> false;
             default -> false;
         };
@@ -41,7 +41,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
     default boolean lessZero() {
         return switch (this) {
             case Zero z -> false;
-            case NonZero nz -> false;
+            case PositiveNonZero pnz -> false;
             case NegativeNonZero nnz -> true;
             default -> false;
         };
@@ -50,7 +50,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
     default boolean lessEqualZero() {
         return switch (this) {
             case Zero z -> true;
-            case NonZero nz -> false;
+            case PositiveNonZero pnz -> false;
             case NegativeNonZero nnz -> true;
             default -> false;
         };
@@ -58,15 +58,15 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
 
     default Numbers addOne() {
         return switch (this) {
-            case NonZero(Numbers pred) -> new NonZero(this);
-            case Zero() -> new NonZero(this);
+            case PositiveNonZero(Numbers pred) -> new PositiveNonZero(this);
+            case Zero() -> new PositiveNonZero(this);
             case NegativeNonZero(Numbers succ) -> succ;
         }; 
     }
 
     default Numbers subOne() {
         return switch (this) {
-            case NonZero(Numbers pred) -> pred;
+            case PositiveNonZero(Numbers pred) -> pred;
             case Zero() -> new NegativeNonZero(this);
             case NegativeNonZero(Numbers succ) -> new NegativeNonZero(this);
         };
@@ -81,7 +81,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
         while (!summand.equalZero()) {
             
             switch (summand) {
-                case NonZero nz:
+                case PositiveNonZero pnz:
                     sum = sum.addOne();
                     summand = summand.subOne();
                     break;
@@ -102,7 +102,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
 
         while (!minuend.equalZero()) {
             switch (minuend) {
-                case NonZero nz:
+                case PositiveNonZero pnz:
                 difference = difference.subOne();
                 minuend = minuend.subOne();
                 break;
@@ -136,7 +136,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
             product = product.add(factor1);
             
             switch (factor2) {
-                case NonZero nz:
+                case PositiveNonZero pnz:
                 factor2 = factor2.subOne();
                 break;
 
@@ -205,11 +205,29 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
         return false;
     }
 
+    default boolean greater(Numbers other) {
+        if (other == null) return false;
+        if (other == this) return false;
+        if (sub(other).greaterZero()) return true;
+        return false;
+    }
+
+    default boolean less(Numbers other) {
+        if (other == null) return false;
+        if (other == this) return false;
+        if (sub(other).lessZero()) return true;
+        return false;
+    }
+
+    default String asString() {
+
+    }
+
     /* default String asString() throws OperationNotSupportedException {
         if (equalZero()) return "N";
         String myString;
         switch (this) {
-            case NonZero nz -> myString = "";
+            case NonZero pnz -> myString = "";
             case NegativeNonZero nnz -> myString = "-";
         }
         Numbers myNumber = this;
@@ -217,7 +235,7 @@ public sealed interface Numbers permits NonZero, NegativeNonZero, Zero {
         while (!myNumber.equalZero()) {
             myString += "I";
             switch (myNumber) {
-                case NonZero nz -> myNumber.subOne();
+                case NonZero pnz -> myNumber.subOne();
                 case NegativeNonZero nnz -> myNumber.addOne();
             }
         }
