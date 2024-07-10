@@ -128,14 +128,15 @@ public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
     default Numbers exp(Numbers n) throws OperationNotSupportedException {
         if (equalZero()) return new Zero();
         if (n.equalZero()) return new Zero().addOne();
+        if (isEqual(new Zero().addOne())) return new Zero().addOne();
+        if (n.isEqual(new Zero().addOne())) return this;
         if (n.lessZero()) throw new OperationNotSupportedException();
 
-        Numbers exponent = n;
         Numbers power = this;
 
-        while (exponent.subOne().greaterZero()) {
+        while (n.subOne().greaterZero()) {
             power = power.mul(this);
-            exponent.subOne();
+            n.subOne();
         }
 
         return power;
@@ -215,22 +216,23 @@ public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
 
         while (!number.equalZero()) {
 
-            Numbers digit = number.mod(ZeroToTen.TEN.value);
+            Numbers digit = number.mod(OneToTen.TEN.value);
             
             switch (digit) {
-                case ZeroToTen.ZERO.value -> string = "0" + string;
-                case ZeroToTen.ONE.value -> string = "1" + string;
-                case ZeroToTen.TWO.value -> string = "2" + string;
-                case ZeroToTen.THREE.value -> string = "3" + string;
-                case ZeroToTen.FOUR.value -> string = "4" + string;
-                case ZeroToTen.FIVE.value -> string = "5" + string;
-                case ZeroToTen.SIX.value -> string = "6" + string;
-                case ZeroToTen.SEVEN.value -> string = "7" + string;
-                case ZeroToTen.EIGHT.value -> string = "8" + string;
-                case ZeroToTen.NINE.value -> string = "9" + string;
+                case new Zero() -> string = "0" + string;
+                case OneToTen.ONE.value -> string = "1" + string;
+                case OneToTen.TWO.value -> string = "2" + string;
+                case OneToTen.THREE.value -> string = "3" + string;
+                case OneToTen.FOUR.value -> string = "4" + string;
+                case OneToTen.FIVE.value -> string = "5" + string;
+                case OneToTen.SIX.value -> string = "6" + string;
+                case OneToTen.SEVEN.value -> string = "7" + string;
+                case OneToTen.EIGHT.value -> string = "8" + string;
+                case OneToTen.NINE.value -> string = "9" + string;
+                default -> string = "0" + string;
             }
 
-            number = number.div(ZeroToTen.TEN.value);
+            number = number.div(OneToTen.TEN.value);
         }
 
         return switch(number) {

@@ -1,5 +1,4 @@
-public enum ZeroToTen {
-    ZERO (new Zero()),
+public enum OneToTen {
     ONE  (new Zero().addOne()),
     TWO  (new Zero().addOne().addOne()),
     THREE(new Zero().addOne().addOne().addOne()),
@@ -13,7 +12,7 @@ public enum ZeroToTen {
 
     Numbers value;
 
-    ZeroToTen(Numbers value) {
+    OneToTen(Numbers value) {
         this.value = value;
     }
 }
