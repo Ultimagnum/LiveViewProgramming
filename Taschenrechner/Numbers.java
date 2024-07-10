@@ -11,15 +11,6 @@ public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
         };
     }
 
-    default boolean notZero() {
-        return switch (this) {
-            case Zero z -> false;
-            case PositiveNonZero pnz -> true;
-            case NegativeNonZero nnz -> true;
-            default -> false;
-        };
-    }
-
     default boolean greaterZero() {
         return switch (this) {
             case Zero z -> false;
@@ -29,27 +20,9 @@ public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
         };
     }
 
-    default boolean greaterEqualZero() {
-        return switch (this) {
-            case Zero z -> true;
-            case PositiveNonZero pnz -> true;
-            case NegativeNonZero nnz -> false;
-            default -> false;
-        };
-    }
-
     default boolean lessZero() {
         return switch (this) {
             case Zero z -> false;
-            case PositiveNonZero pnz -> false;
-            case NegativeNonZero nnz -> true;
-            default -> false;
-        };
-    }
-
-    default boolean lessEqualZero() {
-        return switch (this) {
-            case Zero z -> true;
             case PositiveNonZero pnz -> false;
             case NegativeNonZero nnz -> true;
             default -> false;
@@ -152,6 +125,22 @@ public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
         return product;
     }
 
+    default Numbers exp(Numbers n) throws OperationNotSupportedException {
+        if (equalZero()) return new Zero();
+        if (n.equalZero()) return new Zero().addOne();
+        if (n.lessZero()) throw new OperationNotSupportedException();
+
+        Numbers exponent = n;
+        Numbers power = this;
+
+        while (exponent.subOne().greaterZero()) {
+            power = power.mul(this);
+            exponent.subOne();
+        }
+
+        return power;
+    }
+
     default Numbers div(Numbers n) throws OperationNotSupportedException {
         if (equalZero()) return new Zero();
         if (n.equalZero()) throw new OperationNotSupportedException();
@@ -220,7 +209,35 @@ public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
     }
 
     default String asString() {
+        if (this.equalZero()) return "0";
+        Numbers number = this;
+        String string = "";
 
+        while (!number.equalZero()) {
+
+            Numbers digit = number.mod(ZeroToTen.TEN.value);
+            
+            switch (digit) {
+                case ZeroToTen.ZERO.value -> string = "0" + string;
+                case ZeroToTen.ONE.value -> string = "1" + string;
+                case ZeroToTen.TWO.value -> string = "2" + string;
+                case ZeroToTen.THREE.value -> string = "3" + string;
+                case ZeroToTen.FOUR.value -> string = "4" + string;
+                case ZeroToTen.FIVE.value -> string = "5" + string;
+                case ZeroToTen.SIX.value -> string = "6" + string;
+                case ZeroToTen.SEVEN.value -> string = "7" + string;
+                case ZeroToTen.EIGHT.value -> string = "8" + string;
+                case ZeroToTen.NINE.value -> string = "9" + string;
+            }
+
+            number = number.div(ZeroToTen.TEN.value);
+        }
+
+        return switch(number) {
+            case PositiveNonZero pnz -> string;
+            case NegativeNonZero nnz -> "-" + string;
+            default -> "0";
+        };
     }
 
     /* default String asString() throws OperationNotSupportedException {
