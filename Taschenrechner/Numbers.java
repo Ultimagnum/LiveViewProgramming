@@ -236,11 +236,11 @@ public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
 
         while (!number.equalZero()) {
 
-            Numbers digit = number.mod(OneToTen.TEN.value);
+            Numbers digit = number.mod(new Zero().addOne().addOne().addOne().addOne().addOne().addOne().addOne().addOne().addOne().addOne());
             
             string = digitToChar.get(digit) + string;
 
-            number = number.div(OneToTen.TEN.value);
+            number = number.div(new Zero().addOne().addOne().addOne().addOne().addOne().addOne().addOne().addOne().addOne().addOne());
         }
 
         if (negative) return "-" + string;

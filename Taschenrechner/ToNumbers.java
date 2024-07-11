@@ -1,4 +1,6 @@
 import javax.naming.OperationNotSupportedException;
+
+import java.util.Arrays;
 import java.util.Map;
 
 
@@ -16,22 +18,6 @@ Map<Character, Numbers> charToNumbers = Map.of(
 
 );
 
-/* Numbers charToNumbers(char c) {
-    return switch(c) {
-        case '0' -> new Zero();
-        case '1' -> OneToTen.ONE.value;
-        case '2' -> OneToTen.TWO.value;
-        case '3' -> OneToTen.THREE.value;
-        case '4' -> OneToTen.FOUR.value;
-        case '5' -> OneToTen.FIVE.value;
-        case '6' -> OneToTen.SIX.value;
-        case '7' -> OneToTen.SEVEN.value;
-        case '8' -> OneToTen.EIGHT.value;
-        case '9' -> OneToTen.NINE.value;
-        default -> new Zero();
-    };
-} */
-
 Numbers stringToNumbers(String string) throws OperationNotSupportedException {
     if (string.length() == 1) return charToNumbers.get(string.charAt(0));
     boolean negative = string.charAt(0) == '-';
@@ -46,14 +32,14 @@ Numbers stringToNumbers(String string) throws OperationNotSupportedException {
         revString = c + revString;
     }
 
-    System.out.println(string);
-    System.out.println(revString);
 
 
     for (char c : revString.toCharArray()) {
         number = number.add(charToNumbers.get(c).mul(ten.exp(exponent)));
         exponent = exponent.addOne();
     }
+
+    //Arrays.asList(string.toCharArray()).stream().mapToObj((i) -> List.of());
 
     if (negative) return number.neg();
     return number;
