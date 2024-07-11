@@ -1,3 +1,5 @@
+import java.util.Map;
+
 import javax.naming.OperationNotSupportedException;
 
 public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
@@ -126,17 +128,18 @@ public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
     }
 
     default Numbers exp(Numbers n) throws OperationNotSupportedException {
+        if (equalZero() && n.equalZero()) throw new OperationNotSupportedException();
         if (equalZero()) return new Zero();
+        if (n.lessZero()) throw new OperationNotSupportedException();
         if (n.equalZero()) return new Zero().addOne();
         if (isEqual(new Zero().addOne())) return new Zero().addOne();
         if (n.isEqual(new Zero().addOne())) return this;
-        if (n.lessZero()) throw new OperationNotSupportedException();
 
         Numbers power = this;
 
         while (n.subOne().greaterZero()) {
             power = power.mul(this);
-            n.subOne();
+            n = n.subOne();
         }
 
         return power;
@@ -209,95 +212,38 @@ public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
         return false;
     }
 
-    default String asString() {
+    Map<Numbers,Character> digitToChar = Map.of(
+        new Zero(), '0',
+        new Zero().addOne(), '1',
+        new Zero().addOne().addOne(), '2',
+        new Zero().addOne().addOne().addOne(),'3',
+        new Zero().addOne().addOne().addOne().addOne(),'4',
+        new Zero().addOne().addOne().addOne().addOne().addOne(),'5',
+        new Zero().addOne().addOne().addOne().addOne().addOne().addOne(),'6',
+        new Zero().addOne().addOne().addOne().addOne().addOne().addOne().addOne(),'7',
+        new Zero().addOne().addOne().addOne().addOne().addOne().addOne().addOne().addOne(),'8',
+        new Zero().addOne().addOne().addOne().addOne().addOne().addOne().addOne().addOne().addOne(),'9'
+    );
+
+    default String asString() throws OperationNotSupportedException {
         if (this.equalZero()) return "0";
-        Numbers number = this;
+
+        boolean negative = this.lessZero();
+        Numbers number;
+        if (negative) number = this.neg();
+        else number = this;
         String string = "";
 
         while (!number.equalZero()) {
 
             Numbers digit = number.mod(OneToTen.TEN.value);
             
-            switch (digit) {
-                case new Zero() -> string = "0" + string;
-                case OneToTen.ONE.value -> string = "1" + string;
-                case OneToTen.TWO.value -> string = "2" + string;
-                case OneToTen.THREE.value -> string = "3" + string;
-                case OneToTen.FOUR.value -> string = "4" + string;
-                case OneToTen.FIVE.value -> string = "5" + string;
-                case OneToTen.SIX.value -> string = "6" + string;
-                case OneToTen.SEVEN.value -> string = "7" + string;
-                case OneToTen.EIGHT.value -> string = "8" + string;
-                case OneToTen.NINE.value -> string = "9" + string;
-                default -> string = "0" + string;
-            }
+            string = digitToChar.get(digit) + string;
 
             number = number.div(OneToTen.TEN.value);
         }
 
-        return switch(number) {
-            case PositiveNonZero pnz -> string;
-            case NegativeNonZero nnz -> "-" + string;
-            default -> "0";
-        };
+        if (negative) return "-" + string;
+        return string;
     }
-
-    /* default String asString() throws OperationNotSupportedException {
-        if (equalZero()) return "N";
-        String myString;
-        switch (this) {
-            case NonZero pnz -> myString = "";
-            case NegativeNonZero nnz -> myString = "-";
-        }
-        Numbers myNumber = this;
-
-        while (!myNumber.equalZero()) {
-            myString += "I";
-            switch (myNumber) {
-                case NonZero pnz -> myNumber.subOne();
-                case NegativeNonZero nnz -> myNumber.addOne();
-            }
-        }
-
-        myString = myString.replace("IIIII", "V");
-        myString = myString.replace("IIII", "IV");
-        myString = myString.replace("VV", "X");
-        myString = myString.replace("VIV", "IX");
-        myString = myString.replace("XXXXX", "L");
-        myString = myString.replace("XXXX", "XL");
-        myString = myString.replace("LL", "C");
-        myString = myString.replace("LXL", "XC");
-        myString = myString.replace("CCCCC", "D");
-        myString = myString.replace("CCCC", "CD");
-        myString = myString.replace("DD", "M");
-        myString = myString.replace("DCD", "CM");
-
-        return myString;
-    } */
-
-    /* default Numbers asObject(String myString) {
-        if (myString.equals("N")) {
-            return new Zero();
-        }
-
-        myString = myString.replace("CM", "DCD");
-        myString = myString.replace("M", "DD");
-        myString = myString.replace("CD", "CCCC");
-        myString = myString.replace("D", "CCCCC");
-        myString = myString.replace("XC", "LXL");
-        myString = myString.replace("C", "LL");
-        myString = myString.replace("XL", "XXXX");
-        myString = myString.replace("L", "XXXXX");
-        myString = myString.replace("IX", "VIV");
-        myString = myString.replace("X", "VV");
-        myString = myString.replace("IV", "IIII");
-        myString = myString.replace("V", "IIIII");
-
-        Numbers myNumber = new Zero();
-        for (int i = 0; i < myString.length(); i++) {
-            myNumber.addOne();
-        }
-
-        return myNumber;
-    } */
 }
