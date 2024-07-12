@@ -246,4 +246,48 @@ public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
         if (negative) return "-" + string;
         return string;
     }
+
+    default void write() throws OperationNotSupportedException {
+        Clerk.markdown(asString());
+    }
+
+    default void writeIsGreater(Numbers n) throws OperationNotSupportedException {
+        if (greater(n)) Clerk.markdown(asString() + " ist größer als " + n.asString());
+        else Clerk.markdown(asString() + " ist nicht größer als " + n.asString());
+    }
+
+    default void writeIsLesser(Numbers n) throws OperationNotSupportedException {
+        if (less(n)) Clerk.markdown(asString() + " ist kleiner als " + n.asString());
+        else Clerk.markdown(asString() + " ist nicht kleiner als " + n.asString());
+    }
+
+    default void writeIsEqual(Numbers n) throws OperationNotSupportedException {
+        if(isEqual(n)) Clerk.markdown("Beide Zahlen haben den Wert: " + asString());
+        else Clerk.markdown("Die Zahlen haben unterschiedliche Werte: " + asString() + " und "+ n.asString());
+    }
+
+    default void writeAdd(Numbers n) throws OperationNotSupportedException {
+        Clerk.markdown(asString() + " + " + n.asString() + " = " + add(n).asString());
+    };
+
+    default void writeSub(Numbers n) throws OperationNotSupportedException {
+        Clerk.markdown(asString() + " - " + n.asString() + " = " + sub(n).asString());
+    }
+
+    default void writeMul(Numbers n) throws OperationNotSupportedException {
+        Clerk.markdown(asString() + " * " + n.asString() + " = " + mul(n).asString());
+    }
+
+    default void writeExp(Numbers n) throws OperationNotSupportedException {
+        Clerk.markdown(asString() + " ^ " + n.asString() + " = " + exp(n).asString());
+    }
+
+    default void writeDiv(Numbers n) throws OperationNotSupportedException {
+        Clerk.markdown(asString() + " / " + n.asString() + " = " + div(n).asString());
+    }
+
+    default void writeMod(Numbers n) throws OperationNotSupportedException {
+        Clerk.markdown(asString() + " % " + n.asString() + " = " + mod(n).asString());
+    }
+
 }

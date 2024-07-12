@@ -32,14 +32,10 @@ Numbers stringToNumbers(String string) throws OperationNotSupportedException {
         revString = c + revString;
     }
 
-
-
     for (char c : revString.toCharArray()) {
         number = number.add(charToNumbers.get(c).mul(ten.exp(exponent)));
         exponent = exponent.addOne();
     }
-
-    //Arrays.asList(string.toCharArray()).stream().mapToObj((i) -> List.of());
 
     if (negative) return number.neg();
     return number;

@@ -2,6 +2,8 @@ import java.util.function.BiFunction;
 
 import javax.naming.OperationNotSupportedException;
 
+import Taschenrechner.Numbers;
+
 public enum BiOperator implements BiFunction<Numbers, Numbers, Numbers> {
     ADD ((x,y) -> x.add(y)),
     SUB ((x,y) -> x.sub(y)),
