@@ -1,8 +1,16 @@
 # Taschenrechner:
 
-Für die Ausführ
+## Benötigte Dateien
 
+Folgende Dateien sind notwending, um das Pro
+
+## Reihenfolge für Ausführung
+
+Für die Ausführung wird die jshell mit folgenden Parametern gestartet
+
+```shell
 jshell -R-ea --enable-preview
+```
 
 /o lvp.java
 /o Taschenrechner.java

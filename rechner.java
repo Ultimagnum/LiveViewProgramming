@@ -10,26 +10,32 @@ Der Taschenrechner kennt die folgenden Kommandos:
 
 Befehl | Bedeutung
 -------|----------
-`a.equalZero()` | Gibt den Nachfoger einer Zahl zurück
-`a.greaterZero()` | Gibt den Nachfoger einer Zahl zurück
-`a.lessZero()` | Gibt den Nachfoger einer Zahl zurück
-`a.addOne()` | Gibt den Nachfoger einer Zahl zurück
-`a.subOne()`   | Gibt den Vorgänger einer Zahl zurück
-`a.add(Numbers b)`  | Bewege dich um _distance_ vorwärts
-`a.sub(Numbers b)` | Bewege dich um _distance_ rückwärts 
-`a.neg()` | Kehrt den Wert einer Zahl um 
-`a.mul(Numbers b)`     | Drehe dich um die Gradzahl _degrees_ nach rechts
-`a.exp(Numbers b)`      | Drehe dich um die Gradzahl _degrees_ nach links
-`a.div(Numbers b)` | Setze Stiftfarbe mit den RGB-Farbanteilen _red_, _green_ und _blue_
-`a.mod(Numbers b)`            | Setze Stiftfarbe auf den kodierten RGB-Farbwert _rgb_
-`lineWidth(double width)`   | Setze Stiftbreite auf _width_
-`reset()`                   | Löscht Zeichenfläche, Schildkröte in Bildmitte
-`reset()`                   | Löscht Zeichenfläche, Schildkröte in Bildmitte
-`reset()`                   | Löscht Zeichenfläche, Schildkröte in Bildmitte
-`reset()`                   | Löscht Zeichenfläche, Schildkröte in Bildmitte
-`reset()`                   | Löscht Zeichenfläche, Schildkröte in Bildmitte
-
-Alle Befehle werden auf bestehende Numbers-Objekte angewendet
+`equalZero()`               | Bestimmt ob eine Zahl gleich "0" ist
+`greaterZero()`             | Bestimmt ob eine Zahl größer als "0" ist
+`lessZero()`                | Bestimmt ob eine Zahl gleich "0" ist
+`addOne()`                  | Gibt den Nachfoger einer Zahl zurück
+`subOne()`                  | Gibt den Vorgänger einer Zahl zurück
+`add(Numbers n)`            | Gibt die Summe der Zahl und n zurück
+`sub(Numbers n)`            | Gibt die Differenz der Zahl mit dem Minuend n zurück 
+`neg()`                     | Gibt den negierten Wert einer Zahl um 
+`mul(Numbers n)`            | Gibt das Produkt der Zahl und n zurück
+`exp(Numbers n)`            | Gibt den Potenzwert der Zahl mit dem Exponent n zurück
+`div(Numbers n)`            | Gibt den Quotient der Zahl a mit dem Divisor n zurück
+`mod(Numbers n)`            | Gibt den Modulo der Zahl a mit dem Divisor n zurück
+`isEqual(Object other)`     | Vergleicht zwei Objekte, ob sie Numbers mit dem gleichen Wert sind
+`isGreater(Numbers other)`  | Löscht Zeichenfläche, Schildkröte in Bildmitte
+`isLess(Numbers other)`     | Löscht Zeichenfläche, Schildkröte in Bildmitte
+`asString()`                | Gibt Zahl als String zurück
+`write()`                   | Löscht Zeichenfläche, Schildkröte in Bildmitte
+`writeIsGreater(Numbers n)` | Löscht Zeichenfläche, Schildkröte in Bildmitte
+`writeIsLesser(Numbers n)`  | Löscht Zeichenfläche, Schildkröte in Bildmitte
+`writeIsEqual(Numbers n)`   | Löscht Zeichenfläche, Schildkröte in Bildmitte
+`writeAdd(Numbers n)`       | Löscht Zeichenfläche, Schildkröte in Bildmitte
+`writeSub(Numbers n)`       | Löscht Zeichenfläche, Schildkröte in Bildmitte
+`writeMul(Numbers n)`       | Löscht Zeichenfläche, Schildkröte in Bildmitte
+`writeExp(Numbers n)`       | Löscht Zeichenfläche, Schildkröte in Bildmitte
+`writeSub(Numbers n)`       | Löscht Zeichenfläche, Schildkröte in Bildmitte
+`writeDiv(Numbers n)`       | Löscht Zeichenfläche, Schildkröte in Bildmitte
 
 Mit diesen Kommandos wird die Schildkröte über die Zeichenfläche geschickt und das Zeichnen gesteuert. Wenn man Abfolgen von diesen Kommandos programmiert, kann man teils mit sehr wenig Code interessante Zeichnungen erstellen.
 
