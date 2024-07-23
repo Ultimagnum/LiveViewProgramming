@@ -261,50 +261,6 @@ public sealed interface Numbers permits PositiveNonZero, NegativeNonZero, Zero {
         return string;
     }
 
-    
-    default void write() throws OperationNotSupportedException {
-        Clerk.markdown(asString());
-    }
-
-    default void writeIsGreater(Numbers n) throws OperationNotSupportedException {
-        if (isGreater(n)) Clerk.markdown(asString() + " ist größer als " + n.asString());
-        else Clerk.markdown(asString() + " ist nicht größer als " + n.asString());
-    }
-
-    default void writeIsLesser(Numbers n) throws OperationNotSupportedException {
-        if (isLess(n)) Clerk.markdown(asString() + " ist kleiner als " + n.asString());
-        else Clerk.markdown(asString() + " ist nicht kleiner als " + n.asString());
-    }
-
-    default void writeIsEqual(Numbers n) throws OperationNotSupportedException {
-        if(isEqual(n)) Clerk.markdown("Beide Zahlen haben den Wert: " + asString());
-        else Clerk.markdown("Die Zahlen haben unterschiedliche Werte: " + asString() + " und "+ n.asString());
-    }
-
-    default void writeAdd(Numbers n) throws OperationNotSupportedException {
-        Clerk.markdown(asString() + " + " + n.asString() + " = " + add(n).asString());
-    };
-
-    default void writeSub(Numbers n) throws OperationNotSupportedException {
-        Clerk.markdown(asString() + " - " + n.asString() + " = " + sub(n).asString());
-    }
-
-    default void writeMul(Numbers n) throws OperationNotSupportedException {
-        Clerk.markdown(asString() + " * " + n.asString() + " = " + mul(n).asString());
-    }
-
-    default void writeExp(Numbers n) throws OperationNotSupportedException {
-        Clerk.markdown(asString() + " ^ " + n.asString() + " = " + exp(n).asString());
-    }
-
-    default void writeDiv(Numbers n) throws OperationNotSupportedException {
-        Clerk.markdown(asString() + " / " + n.asString() + " = " + div(n).asString());
-    }
-
-    default void writeMod(Numbers n) throws OperationNotSupportedException {
-        Clerk.markdown(asString() + " % " + n.asString() + " = " + mod(n).asString());
-    }
-
 }
 
 
@@ -325,7 +281,7 @@ Map<Character, Numbers> charToNumbers = Map.of(
 Numbers stringToNumbers(String string) throws OperationNotSupportedException {
     if (string.length() == 1) return charToNumbers.get(string.charAt(0));
     boolean negative = string.charAt(0) == '-';
-    string.replace("-", "");
+    string = string.replace("-", "");
 
     Numbers number = new Zero();
     Numbers ten = new Zero().addOne().addOne().addOne().addOne().addOne().addOne().addOne().addOne().addOne().addOne();
@@ -343,4 +299,63 @@ Numbers stringToNumbers(String string) throws OperationNotSupportedException {
 
     if (negative) return number.neg();
     return number;
+}
+
+void writeNumbers(Numbers n) throws OperationNotSupportedException {
+    Clerk.markdown(n.asString());
+}
+
+void writeEquality(Numbers n, Numbers m) throws OperationNotSupportedException  {
+    if(n.isEqual(m)) Clerk.markdown("Beide Zahlen haben den Wert: " + n.asString());
+    else if (n.isGreater(m)) Clerk.markdown(n.asString() + " ist größer als " + m.asString());
+    else Clerk.markdown(n.asString() + " ist kleiner als " + m.asString());
+}
+
+void writeAdd(Numbers n, Numbers m) throws OperationNotSupportedException {
+    String a = n.asString();
+    String b = m.asString();
+    if (n.lessZero()) a = "(" + a + ")";
+    if (m.lessZero()) b = "(" + b + ")";
+    Clerk.markdown(a + " + " + b + " = " + n.add(m).asString());
+}
+
+void writeSub(Numbers n, Numbers m) throws OperationNotSupportedException {
+    String a = n.asString();
+    String b = m.asString();
+    if (n.lessZero()) a = "(" + a + ")";
+    if (m.lessZero()) b = "(" + b + ")";
+    Clerk.markdown(a + " - " + b + " = " + n.sub(m).asString());
+}
+
+
+void writeMul(Numbers n, Numbers m) throws OperationNotSupportedException {
+    String a = n.asString();
+    String b = m.asString();
+    if (n.lessZero()) a = "(" + a + ")";
+    if (m.lessZero()) b = "(" + b + ")";
+    Clerk.markdown(a + " * " + b + " = " + n.mul(m).asString());
+}
+
+void writeExp(Numbers n, Numbers m) throws OperationNotSupportedException {
+    String a = n.asString();
+    String b = m.asString();
+    if (n.lessZero()) a = "(" + a + ")";
+    if (m.lessZero()) b = "(" + b + ")";
+    Clerk.markdown(a + " ^ " + b + " = " + n.exp(m).asString());
+}
+
+void writeDiv(Numbers n, Numbers m) throws OperationNotSupportedException {
+    String a = n.asString();
+    String b = m.asString();
+    if (n.lessZero()) a = "(" + a + ")";
+    if (m.lessZero()) b = "(" + b + ")";
+    Clerk.markdown(a + " / " + b + " = " + n.div(m).asString());
+}
+
+void writeMod(Numbers n, Numbers m) throws OperationNotSupportedException {
+    String a = n.asString();
+    String b = m.asString();
+    if (n.lessZero()) a = "(" + a + ")";
+    if (m.lessZero()) b = "(" + b + ")";
+    Clerk.markdown(a + " % " + b + " = " + n.mod(m).asString());
 }
