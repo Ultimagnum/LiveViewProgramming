@@ -248,7 +248,7 @@ Erwartete Ergebnisse:
 
 117649
 
-Erzeugte Ergenisse:
+Erzeugte Ergebnisse:
 """);
 
 // Kette
